@@ -6,44 +6,46 @@
     <title>EK MYSTERY - Explore the Unknown</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: white; text-align: center; margin: 0; padding: 20px; }
-        header { padding: 40px 20px; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80'); background-size: cover; border-bottom: 3px solid #ff4d4d; margin-bottom: 30px; }
-        h1 { color: #ff4d4d; font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; margin: 0; }
+        header { padding: 40px 20px; background: #000; border-bottom: 3px solid #ff4d4d; margin-bottom: 30px; }
+        h1 { color: #ff4d4d; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 5px; margin: 0; }
         .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 20px; }
-        .card { background: #1e1e1e; border-radius: 12px; padding: 20px; width: 320px; border: 1px solid #333; transition: all 0.3s ease; text-align: left; }
-        .card:hover { transform: translateY(-10px); border-color: #ff4d4d; box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2); }
-        h3 { color: #f1c40f; margin-top: 0; font-size: 1.4rem; }
-        p { color: #bbb; font-size: 0.95rem; line-height: 1.5; height: 60px; overflow: hidden; }
-        .btn { display: block; background: #ff4d4d; color: white; padding: 12px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; transition: 0.3s; }
-        .btn:hover { background: #cc0000; box-shadow: 0 0 15px #ff4d4d; }
-        #loading { font-size: 1.5rem; margin-top: 100px; color: #ff4d4d; font-weight: bold; }
+        .card { background: #1e1e1e; border-radius: 12px; padding: 20px; width: 320px; border: 1px solid #333; text-align: left; }
+        h3 { color: #f1c40f; margin-top: 0; font-size: 1.2rem; }
+        p { color: #bbb; font-size: 0.9rem; height: 50px; overflow: hidden; }
+        
+        /* Buttons Style */
+        .btn { display: block; background: #ff4d4d; color: white; padding: 10px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .sub-btn { display: block; background: #282828; color: #ff4d4d; padding: 10px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; border: 1px solid #ff4d4d; }
+        
+        .btn:hover { background: #cc0000; }
+        .sub-btn:hover { background: #ff4d4d; color: white; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>EK MYSTERY 🎥</h1>
-        <p style="color: #eee; font-style: italic;">Duniya ke ansuljhe rahasya jo aapko hairan kar denge...</p>
+        <p>Duniya ke ansuljhe rahasya...</p>
     </header>
 
-    <div id="loading">Mysteries Load ho rahi hain... 🔍</div>
+    <div id="loading">Mysteries Load ho rahi hain...</div>
     <div class="container" id="mystery-container"></div>
 
     <script>
-        // Aapka Sheet Link
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv";
+        
+        // Yahan apna channel link check kar lo ek baar
+        const channelURL = "https://www.youtube.com/@EKMYSTERY"; 
 
         async function fetchMysteries() {
             try {
                 const response = await fetch(sheetURL);
                 const data = await response.text();
-                // Data ko rows mein todna aur pehli row (header) hatana
                 const rows = data.split('\n').slice(1); 
                 
                 let html = '';
                 rows.forEach(row => {
-                    // CSV ke comma ko sahi se handle karne ke liye (Regex)
                     const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); 
-                    
                     if (columns.length >= 3) {
                         const topic = columns[0].replace(/"/g, "").trim();
                         const desc = columns[1].replace(/"/g, "").trim();
@@ -54,23 +56,20 @@
                                 <div class="card">
                                     <h3>${topic}</h3>
                                     <p>${desc}</p>
-                                    <a href="${link}" class="btn" target="_blank">Watch Full Mystery</a>
+                                    <a href="${link}" class="btn" target="_blank">Watch Video</a>
+                                    <a href="${channelURL}" class="sub-btn" target="_blank">🔔 Subscribe</a>
                                 </div>
                             `;
                         }
                     }
                 });
-
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('mystery-container').innerHTML = html;
             } catch (error) {
-                console.error("Error:", error);
-                document.getElementById('loading').innerHTML = "Oops! Data load nahi ho saka. Sheet settings check karein.";
+                document.getElementById('loading').innerHTML = "Error loading data.";
             }
         }
-
         fetchMysteries();
     </script>
-
 </body>
 </html>
