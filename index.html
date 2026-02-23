@@ -3,100 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ek Mystery | Mysterious Knowledge</title>
+    <title>Ek Mystery | Official Site</title>
     <style>
-        /* Dark Mysterious Theme */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            background-color: #0d0d0d; 
-            color: #e0e0e0; 
-            text-align: center; 
-        }
-        header { 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=1000');
-            background-size: cover;
-            background-position: center;
-            padding: 100px 20px; 
-            border-bottom: 3px solid #ff0000;
-        }
-        h1 { font-size: 3.5rem; color: #ff0000; text-transform: uppercase; letter-spacing: 5px; margin: 0; text-shadow: 0 0 20px rgba(255,0,0,0.6); }
-        .tagline { font-size: 1.5rem; color: #bbb; margin-top: 10px; font-style: italic; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #0d0d0d; color: #e0e0e0; text-align: center; }
+        header { background: linear-gradient(0deg, #1a1a1a 0%, #000 100%); padding: 50px 20px; border-bottom: 4px solid #ff0000; }
+        h1 { font-size: 3.5rem; color: #ff0000; margin: 0; text-shadow: 2px 2px 10px rgba(255,0,0,0.5); }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
         
-        .container { padding: 40px 20px; max-width: 900px; margin: auto; }
+        /* Stats Box */
+        .stats-container { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .stat-box { background: #1a1a1a; padding: 15px; border-radius: 10px; border: 1px solid #ff0000; flex: 1; }
+        .stat-box h3 { margin: 0; color: #ff0000; font-size: 1.5rem; }
         
-        .video-card { 
-            background: #1a1a1a; 
-            padding: 20px; 
-            border-radius: 15px; 
-            border: 1px solid #333; 
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .video-card { background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         iframe { width: 100%; height: 450px; border: none; border-radius: 10px; }
         
-        .about-section { 
-            text-align: left; 
-            line-height: 1.8; 
-            background: #161616; 
-            padding: 30px; 
-            border-radius: 10px;
-            border-left: 5px solid #ff0000;
-            margin-bottom: 40px;
-        }
-        h2 { color: #ff0000; font-size: 2rem; }
-        
-        .sub-btn { 
-            display: inline-block; 
-            background: #ff0000; 
-            color: white; 
-            padding: 18px 50px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 1.2rem;
-            border-radius: 50px; 
-            transition: 0.4s;
-            box-shadow: 0 5px 15px rgba(255,0,0,0.3);
-        }
-        .sub-btn:hover { 
-            background: #ffffff; 
-            color: #ff0000; 
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #ff0000;
-        }
-        
-        .footer { padding: 50px; background: #000; color: #555; font-size: 0.9rem; }
+        .sub-btn { display: inline-block; background: #ff0000; color: white; padding: 18px 40px; text-decoration: none; font-weight: bold; border-radius: 50px; font-size: 1.2rem; transition: 0.3s; margin-top: 20px; }
+        .sub-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #ff0000; }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Ek Mystery</h1>
+        <p>Sari duniya se chhupa hai ye sach...</p>
+    </header>
 
-<header>
-    <h1>Ek Mystery</h1>
-    <p class="tagline">Mysterious Knowledge</p>
-</header>
+    <div class="container">
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3 id="subCount">Join Us</h3>
+                <p>Mystery Lovers</p>
+            </div>
+        </div>
 
-<div class="container">
-    <div class="video-card">
-        <h2>Sabse Bada Rahasya 🔍</h2>
-        <iframe src="https://www.youtube.com/embed/vG-fNEkdb8E"></iframe>
-        <p style="margin-top:15px; color:#aaa;">Upar click karke mera latest mystery video dekhein.</p>
+        <div class="video-card">
+            <h2>🔴 Latest Upload</h2>
+            <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=ekmystery-l8v" allowfullscreen></iframe>
+        </div>
+
+        <a href="https://youtube.com/@ekmystery-l8v?sub_confirmation=1" class="sub-btn">SUBSCRIBE NOW</a>
     </div>
-
-    <div class="about-section">
-        <h2>Channel Ke Baare Mein</h2>
-        <p>Is channel par main aapko duniya ke sabse bade rahasyo ke bare mein batata hoon... Swagat hai <strong>Ek Mystery</strong> par. Hum yahan un ansuljhe kisson aur mysterious knowledge ko explore karte hain jo duniya se chhupe hue hain.</p>
-    </div>
-
-    <div style="margin: 50px 0;">
-        <h3 style="margin-bottom:20px;">Kya aap rahasyo ko janne ke liye taiyar hain?</h3>
-        <a href="https://youtube.com/@ekmystery-l8v?si=FJeNjLxoT5bQZz1e" target="_blank" class="sub-btn">SUBSCRIBE TO EK MYSTERY</a>
-    </div>
-</div>
-
-<div class="footer">
-    <p>&copy; 2026 Ek Mystery | Sabhi Haq Mehfooz Hain.</p>
-    <p>Mystery is everywhere...</p>
-</div>
-
 </body>
 </html>
