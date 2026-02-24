@@ -15,8 +15,12 @@
         .card { background: #1e1e1e; border-radius: 12px; width: 340px; border: 1px solid #333; transition: 0.3s; text-align: left; overflow: hidden; display: flex; flex-direction: column; }
         .card:hover { border-color: #ff4d4d; transform: translateY(-5px); }
         
-        /* Video Player in Card */
-        .video-box iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+        /* Thumbnail Style */
+        .thumbnail-box { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; }
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .thumbnail-box:hover img { transform: scale(1.1); }
+        .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: rgba(255, 255, 255, 0.8); transition: 0.3s; }
+        .thumbnail-box:hover .play-icon { color: #ff4d4d; transform: translate(-50%, -50%) scale(1.2); }
         
         .card-content { padding: 15px; flex-grow: 1; }
         h3 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.2rem; }
@@ -25,10 +29,10 @@
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 15px 15px; }
         .btn { padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; font-size: 0.85rem; cursor: pointer; border: none; color: white; }
         
-        .yt-btn { background: #cc0000; } /* YouTube Red */
-        .blog-btn { background: #2563eb; } /* Blog Blue */
+        .yt-btn { background: #cc0000; }
+        .blog-btn { background: #2563eb; }
 
-        /* Modal */
+        /* Modal for Blog */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); overflow-y: auto; }
         .modal-content { background: #1a1a1a; margin: 5% auto; padding: 30px; width: 85%; max-width: 700px; border-radius: 15px; border: 2px solid #ff4d4d; position: relative; text-align: left; line-height: 1.6; }
         .close-btn { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #ff4d4d; }
@@ -65,23 +69,28 @@
 
                     data.forEach((row, index) => {
                         if (row.Topic && row.Topic.trim() !== "") {
-                            // YouTube ID nikalna embed ke liye
+                            // Extract Video ID to get Thumbnail
                             let vidId = "";
                             if(row.Link.includes('v=')) vidId = row.Link.split('v=')[1].split('&')[0];
+                            else if(row.Link.includes('youtu.be/')) vidId = row.Link.split('youtu.be/')[1].split('?')[0];
                             else vidId = row.Link.split('/').pop().split('?')[0];
+
+                            // Thumbnail URL from YouTube
+                            const thumbUrl = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
 
                             html += `
                                 <div class="card">
-                                    <div class="video-box">
-                                        <iframe src="https://www.youtube.com/embed/${vidId}" allowfullscreen></iframe>
+                                    <div class="thumbnail-box" onclick="window.open('${row.Link}', '_blank')">
+                                        <img src="${thumbUrl}" alt="Mystery Thumbnail">
+                                        <div class="play-icon">▶</div>
                                     </div>
                                     <div class="card-content">
                                         <h3>${row.Topic}</h3>
                                         <p>${row.Description || ''}</p>
                                     </div>
                                     <div class="btn-group">
-                                        <a href="${row.Link}" target="_blank" class="btn yt-btn">YouTube 📺</a>
-                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Blog 📖</button>
+                                        <a href="${row.Link}" target="_blank" class="btn yt-btn">Watch Video 📺</a>
+                                        <button class="btn blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>
                                     </div>
                                 </div>
                             `;
