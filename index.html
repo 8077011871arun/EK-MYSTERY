@@ -1,36 +1,106 @@
-function showInfo(results) {
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mera Digital Channel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        :root { --primary-color: #1a73e8; --bg-color: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-color); margin: 0; padding: 20px; color: #333; }
+        header { text-align: center; padding: 25px; background: var(--primary-color); color: white; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .video-container iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+        .card-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 8px; color: #1f2937; }
+        .card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
+        .blog-btn { background: #34a853; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: auto; }
+        .blog-btn:hover { background: #2d8e47; }
+        /* Modal for Blog */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
+        .modal-content { background: white; margin: 5% auto; padding: 30px; width: 90%; max-width: 800px; border-radius: 20px; position: relative; line-height: 1.6; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 35px; cursor: pointer; color: #666; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Mera Digital Channel</h1>
+    <p>Videos aur AutoCAD Tutorials</p>
+</header>
+
+<div id="content-grid"></div>
+
+<div id="blogModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeBlog()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    // Aapka fix CSV link
+    const sheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTtPcrOL76fO_J0QJXWX76wyaGrJXu8w66Tn1hXvwZABONjylabx_D7O3Om_dT5PM6j_XlmWw4gXxcb/pub?output=csv';
+
+    function init() {
+        Papa.parse(sheet_url, {
+            download: true,
+            header: true,
+            complete: showInfo
+        });
+    }
+
+    function showInfo(results) {
         const data = results.data;
         const grid = document.getElementById('content-grid');
         grid.innerHTML = ''; 
         
         data.forEach((row, index) => {
-            // Aapki sheet ke hisaab se 'Link' column check kar raha hai
-            if(row.Link && row.Link.includes('youtu')) {
-                let videoId = "";
+            // Hamari sheet ke columns: Topic, Description, Link, Blog_Text
+            if(row.Link && row.Link.trim() !== "") {
+                let vId = "";
                 if(row.Link.includes('v=')) {
-                    videoId = row.Link.split('v=')[1].split('&')[0];
+                    vId = row.Link.split('v=')[1].split('&')[0];
                 } else {
-                    videoId = row.Link.split('/').pop().split('?')[0];
+                    vId = row.Link.split('/').pop().split('?')[0];
                 }
                 
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
                     <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/${vId}" allowfullscreen></iframe>
                     </div>
                     <div class="card-info">
                         <div class="card-title">${row.Topic || 'Nayi Video'}</div>
-                        <p style="font-size: 0.9rem; color: #666;">${row.Description || ''}</p>
-                        ${row.Blog_Text ? `<button class="blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>` : ''}
+                        <div class="card-desc">${row.Description || ''}</div>
+                        ${(row.Blog_Text && row.Blog_Text.trim() !== "") ? `<button class="blog-btn" onclick="openBlog('${index}')">Read Blog 📖</button>` : ''}
                     </div>
                 `;
                 grid.appendChild(card);
                 
+                // Blog data memory mein save
                 window['blog_' + index] = {
-                    title: row.Topic || 'Blog Post',
-                    content: row.Blog_Text || ''
+                    t: row.Topic || 'Blog Post',
+                    c: row.Blog_Text || ''
                 };
             }
         });
     }
+
+    function openBlog(id) {
+        const b = window['blog_' + id];
+        document.getElementById('modal-body').innerHTML = `<h2>${b.t}</h2><hr>${b.c}`;
+        document.getElementById('blogModal').style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeBlog() {
+        document.getElementById('blogModal').style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('blogModal')) close
