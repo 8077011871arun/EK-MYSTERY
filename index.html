@@ -14,108 +14,59 @@
     </script>
 
     <style>
-        /* Modern Premium Dark Theme */
         body {
             background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
             color: #e0e0e0;
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
         }
 
         header {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 40px 20px;
             text-align: center;
             border-bottom: 2px solid #00d4ff;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
         }
 
         header h1 {
             margin: 0;
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: #00d4ff;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 2px 2px 10px rgba(0, 212, 255, 0.5);
+            letter-spacing: 3px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 30px auto;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* Blog Card Style */
         .blog-post {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Headings Fix: Inko chamkane ke liye */
         .blog-post h2 {
-            color: #00d4ff; /* Neon Blue */
-            font-size: 2.2rem;
-            border-left: 6px solid #00d4ff;
-            padding-left: 15px;
+            color: #00d4ff;
             margin-top: 0;
+            font-size: 1.8rem;
         }
 
-        .blog-post h3 {
-            color: #ffcc00; /* Gold */
-            font-size: 1.6rem;
-            margin-top: 25px;
-        }
-
-        .blog-post p {
-            font-size: 1.15rem;
+        .blog-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
             color: #cfcfcf;
-            line-height: 1.8;
         }
 
-        /* Reaction Buttons */
-        .reactions {
-            display: flex;
-            gap: 15px;
-            margin: 25px 0;
-            padding: 15px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .reaction-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .reaction-btn:hover {
-            background: #00d4ff;
-            transform: translateY(-3px);
-        }
-
-        /* Disqus Comments Section */
-        #disqus_thread {
-            margin-top: 40px;
-            background: rgba(255,255,255,0.02);
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.9rem;
-            color: #666;
+        /* Headings inside blog content */
+        .blog-content h2, .blog-content h3 {
+            color: #ffcc00;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -123,63 +74,46 @@
 
 <header>
     <h1>EK MYSTERY</h1>
-    <p>Uncovering the Secrets of the World</p>
+    <p>Sacchai Jo Chupi Hui Hai</p>
 </header>
 
 <div class="container" id="blog-container">
-    <div class="blog-post">
-        <p>Loading the latest mysteries...</p>
-    </div>
+    <p style="text-align: center;">Mysteries load ho rahi hain...</p>
 </div>
 
-<footer>
-    &copy; 2026 EK MYSTERY | Powered by Curiosity
-</footer>
-
 <script>
-    const SHEET_ID = '1rG-eRzSndrX_Xp_Tj68nE_zO6B0o_8P7X6B0o_8P7'; // APNI ID CHECK KAR LENA
-    const G_SCRIPT_URL = `https://docs.google.com/spreadsheets/d/1vC1jU0I7rWzU93m979iVwXv11I1I1I1I1I1I1I1/gviz/tq?tqx=out:json`;
+    // 1. APNI SHEET ID YAHAN DALO (Lambi wali string jo URL mein hoti hai)
+    const MY_SHEET_ID = '1rG-eRzSndrX_Xp_Tj68nE_zO6B0o_8P7X6B0o_8P7'; 
+    
+    // Is URL ko mat chedna, bas upar ID sahi dalna
+    const G_URL = `https://docs.google.com/spreadsheets/d/${MY_SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    async function loadBlogs() {
+    async function fetchBlogs() {
         try {
-            const response = await fetch(G_SCRIPT_URL);
-            const text = await response.text();
-            const json = JSON.parse(text.substr(47).slice(0, -2));
+            const res = await fetch(G_URL);
+            const data = await res.text();
+            const json = JSON.parse(data.substr(47).slice(0, -2));
             const rows = json.table.rows;
-            const container = document.getElementById('blog-container');
-            container.innerHTML = '';
-
+            
+            let html = '';
             rows.forEach(row => {
-                const title = row.c[0] ? row.c[0].v : '';
+                const title = row.c[0] ? row.c[0].v : 'Untitled';
                 const content = row.c[1] ? row.c[1].v : '';
-                
-                const postDiv = document.createElement('div');
-                postDiv.className = 'blog-post';
-                postDiv.innerHTML = `
-                    <h2>${title}</h2>
-                    <div class="blog-content">${content}</div>
-                    <div class="reactions">
-                        <button class="reaction-btn">🔥 Wow</button>
-                        <button class="reaction-btn">😱 Shocking</button>
-                        <button class="reaction-btn">🤔 Deep</button>
+                html += `
+                    <div class="blog-post">
+                        <h2>${title}</h2>
+                        <div class="blog-content">${content}</div>
                     </div>
-                    <div id="disqus_thread"></div>
                 `;
-                container.appendChild(postDiv);
             });
-
-            // Disqus Load Karo
-            var d = document, s = d.createElement('script');
-            s.src = 'https://ek-mystery.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-
-        } catch (error) {
-            console.error("Error loading sheet:", error);
+            document.getElementById('blog-container').innerHTML = html;
+        } catch (e) {
+            document.getElementById('blog-container').innerHTML = "<p>Dhat teri ki! Load nahi ho paya. Sheet ID check karo bhai.</p>";
+            console.error(e);
         }
     }
 
-    loadBlogs();
+    fetchBlogs();
 </script>
 
 </body>
