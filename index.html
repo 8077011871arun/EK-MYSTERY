@@ -14,7 +14,6 @@
     </script>
 
     <style>
-        /* Premium Dark Theme */
         body {
             background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
             color: #e0e0e0;
@@ -28,7 +27,6 @@
             padding: 50px 20px;
             text-align: center;
             border-bottom: 3px solid #00d4ff;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
         }
 
         header h1 {
@@ -37,7 +35,6 @@
             color: #00d4ff;
             text-transform: uppercase;
             letter-spacing: 5px;
-            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
         }
 
         .container {
@@ -53,45 +50,46 @@
             border-radius: 15px;
             margin-bottom: 50px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
 
         .blog-post h2 {
             color: #00d4ff;
             font-size: 2.2rem;
-            margin-top: 0;
             border-left: 6px solid #00d4ff;
             padding-left: 15px;
             margin-bottom: 20px;
         }
 
-        /* Content inside the blog */
         .blog-content {
             font-size: 1.2rem;
             line-height: 1.8;
             color: #d1d1d1;
+            white-space: pre-wrap; /* Isse line breaks sahi dikhenge */
         }
 
-        /* Headings inside Sheet text */
-        .blog-content h2, .blog-content h3 {
-            color: #ffcc00 !important;
-            margin-top: 30px;
-        }
-
-        /* Video Responsive Banane ke liye */
-        iframe, video {
-            width: 100%;
-            height: 450px;
-            border-radius: 10px;
+        /* Video Styling */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
             margin: 20px 0;
-            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         footer {
             text-align: center;
             padding: 40px;
             color: #555;
-            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -103,16 +101,24 @@
 </header>
 
 <div class="container" id="blog-container">
-    <p style="text-align: center; font-size: 1.5rem;">Mysteries load ho rahi hain...</p>
+    <p style="text-align: center;">Mysteries load ho rahi hain...</p>
 </div>
 
 <footer>
-    &copy; 2026 EK MYSTERY | Designed for the Curious Mind
+    &copy; 2026 EK MYSTERY
 </footer>
 
 <script>
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    // Normal YouTube link ko Embed link mein badalne ka function
+    function linkToVideo(text) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        return text.replace(youtubeRegex, (match, id) => {
+            return `<div class="video-container"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>`;
+        });
+    }
 
     async function getBlogs() {
         try {
@@ -124,9 +130,11 @@
             let finalHtml = '';
             
             rows.forEach(row => {
-                // Hum title aur content ko innerHTML ke liye parse karenge
                 const title = row.c[0] ? row.c[0].v : 'Untitled Mystery';
-                const content = row.c[1] ? row.c[1].v : 'Coming soon...';
+                let content = row.c[1] ? row.c[1].v : 'Coming soon...';
+                
+                // Normal link ko Video mein badlo
+                content = linkToVideo(content);
                 
                 finalHtml += `
                     <div class="blog-post">
@@ -137,17 +145,16 @@
                 `;
             });
             
-            // Ab ye text ko asli HTML mein badal dega (Video aur Blogs khul jayenge)
             document.getElementById('blog-container').innerHTML = finalHtml;
 
-            // Disqus Load Karo
+            // Disqus Load
             var d = document, s = d.createElement('script');
             s.src = 'https://ek-mystery.disqus.com/embed.js'; 
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
 
         } catch (err) {
-            document.getElementById('blog-container').innerHTML = `<p style="color:red; text-align:center;">Error: Data nahi mil raha. Sheet check karein.</p>`;
+            document.getElementById('blog-container').innerHTML = `<p>Error Loading Data...</p>`;
         }
     }
 
