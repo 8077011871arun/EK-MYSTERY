@@ -16,10 +16,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --red: #8b0000; --gold: #ffcc00; --bg: #0a0a0a; --card: #161616; }
-        body { background: var(--bg); color: #fff; font-family: 'Roboto', sans-serif; margin: 0; }
-        header { background: #000; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--red); }
-        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--red); margin: 0; letter-spacing: 4px; }
+       /* Body ka background - Jet Black ki jagah thoda soft dark */
+body {
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+    color: #e0e0e0; /* Off-white text jo aankhon ko sukoon de */
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Blog post ka container - Isse thoda utha hua aur "Glassy" look milega */
+.blog-content {
+    background: rgba(255, 255, 255, 0.05); /* Halka sa transparent white */
+    backdrop-filter: blur(10px); /* Glass blur effect */
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-top: 20px;
+}
+
+/* Headings ko ekdum naya aur bright look dene ke liye */
+.blog-content h2 {
+    color: #00d4ff; /* Neon Blue - headings door se dikhengi */
+    font-size: 2rem;
+    border-left: 5px solid #00d4ff;
+    padding-left: 15px;
+    margin: 30px 0 15px 0;
+}
+
+.blog-content h3 {
+    color: #ffcc00; /* Gold - sub headings ke liye */
+    font-size: 1.5rem;
+    margin-top: 25px;
+}
+
+/* Paragraph text ko clear dikhane ke liye */
+.blog-content p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #cfcfcf;
+    margin-bottom: 20px;
+}
+
+/* Lists (agar tu points daale) */
+.blog-content ul {
+    margin-left: 20px;
+    color: #cfcfcf;
+}
+
+.blog-content li {
+    margin-bottom: 10px;
+}
         
         #google_translate_element { text-align: right; background: #111; padding: 5px; }
 
@@ -142,3 +188,4 @@
 
 </body>
 </html>
+
