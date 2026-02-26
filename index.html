@@ -21,8 +21,8 @@
         #google_translate_element { text-align: center; margin: 10px 0; }
 
         #reading-timer { 
-            position: fixed; top: 10px; right: 10px; background: rgba(0,212,255,0.9); 
-            padding: 8px 15px; border-radius: 20px; border: 1px solid #fff; 
+            position: fixed; top: 10px; right: 10px; background: #00d4ff; 
+            padding: 8px 15px; border-radius: 20px; border: 2px solid #fff; 
             font-weight: bold; color: #000; z-index: 1000; display: none;
         }
 
@@ -59,14 +59,15 @@
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 10px; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        #comment-section { margin-top: 30px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px; }
+        /* Disqus Container */
+        #disqus_holder { margin-top: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; }
 
         footer { text-align: center; padding: 40px; color: #555; }
     </style>
 </head>
 <body>
 
-<div id="reading-timer">Reading Time: <span id="timer-val">00:00</span></div>
+<div id="reading-timer">Reading: <span id="timer-val">00:00</span></div>
 
 <header><h1>EK MYSTERY</h1></header>
 
@@ -79,7 +80,11 @@
     <button class="filter-btn" onclick="filterData('News')">News</button>
 </div>
 
-<div class="container" id="post-container">Loading...</div>
+<div class="container" id="post-container">Loading mysteries...</div>
+
+<div id="universal-disqus" style="display:none;">
+    <div id="disqus_thread"></div>
+</div>
 
 <footer>&copy; 2026 EK MYSTERY</footer>
 
@@ -120,15 +125,11 @@ function googleTranslateElementInit() {
         }, 1000);
     }
 
-    function stopTimer() {
-        clearInterval(timerInterval);
-        document.getElementById('reading-timer').style.display = 'none';
-    }
-
     function filterData(category) {
         const container = document.getElementById('post-container');
         let html = '';
-        stopTimer();
+        document.getElementById('reading-timer').style.display = 'none';
+        clearInterval(timerInterval);
 
         postsData.forEach((row, index) => {
             const topic = row.c[0]?.v || '';
@@ -150,14 +151,13 @@ function googleTranslateElementInit() {
                         
                         ${blogText ? `
                             <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index}, '${topic}')">Read Blog</button>
-                            <div id="blog-${index}" class="blog-content">
+                            <div id="blog-box-${index}" class="blog-content">
                                 ${blogText}
                                 <div class="reactions">
                                     <button class="react-btn">🔥 Mast</button>
                                     <button class="react-btn">😱 Shocking</button>
-                                    <button class="react-btn">❤️ Love</button>
                                 </div>
-                                <div id="disqus_thread_${index}"></div>
+                                <div id="comment-anchor-${index}"></div>
                             </div>
                         ` : ''}
                     </div>
@@ -168,34 +168,46 @@ function googleTranslateElementInit() {
     }
 
     function toggleBlog(index, title) {
-        const content = document.getElementById(`blog-${index}`);
+        const content = document.getElementById(`blog-box-${index}`);
         const btn = document.getElementById(`btn-${index}`);
-        
+        const disqusHolder = document.getElementById('universal-disqus');
+        const anchor = document.getElementById(`comment-anchor-${index}`);
+
         if (content.style.display === "block") {
             content.style.display = "none";
             btn.innerText = "Read Blog";
-            stopTimer();
+            document.getElementById('reading-timer').style.display = 'none';
+            clearInterval(timerInterval);
+            disqusHolder.style.display = "none";
         } else {
-            // Pehle sab band karo phir ye kholo
+            // Close others
             document.querySelectorAll('.blog-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.read-more-btn').forEach(el => el.innerText = 'Read Blog');
+            
             content.style.display = "block";
             btn.innerText = "Close Blog";
             startTimer();
-            loadDisqus(index, title);
+            
+            // Move Disqus to this blog
+            anchor.appendChild(disqusHolder);
+            disqusHolder.style.display = "block";
+            
+            if (typeof DISQUS !== 'undefined') {
+                DISQUS.reset({
+                    reload: true,
+                    config: function () {  
+                        this.page.identifier = 'blog-' + index;  
+                        this.page.url = window.location.href + '#!blog-' + index;
+                        this.page.title = title;
+                    }
+                });
+            } else {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://ek-mystery.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            }
         }
-    }
-
-    function loadDisqus(index, title) {
-        // Purana thread clear karke naya lagane ka tareeka
-        const thread = document.getElementById(`disqus_thread_${index}`);
-        thread.innerHTML = ''; 
-        
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = 'https://ek-mystery.disqus.com/embed.js';
-        dsq.setAttribute('data-timestamp', +new Date());
-        (document.head || document.body).appendChild(dsq);
     }
 
     loadData();
