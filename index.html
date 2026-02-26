@@ -5,109 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EK MYSTERY - Explore the Unknown</title>
     
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-20XEJMCB2R"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-20XEJMCB2R');
-    </script>
-
     <style>
-        /* --- GOOGLE TRANSLATE CLEANUP (BLOCKS HATANE KE LIYE) --- */
-        .goog-te-banner-frame { display: none !important; } 
-        body { top: 0 !important; }
-        
-        /* Ye line un safed blocks (highlights) ko khatam kar degi */
-        .goog-text-highlight { 
-            background: transparent !important; 
-            box-shadow: none !important; 
-            border: none !important; 
-        }
-        
-        /* Cursor popup band karne ke liye */
-        #goog-gt-tt, .goog-te-balloon-frame, .goog-te-tooltip, .goog-te-tooltip2 { 
-            display: none !important; 
-            visibility: hidden !important; 
+        /* --- 1. GOOGLE TRANSLATE WHITE BLOCKS REMOVAL --- */
+        /* Ye kisi bhi tarah ke highlight ya white background ko block karega */
+        font, span, .goog-text-highlight {
+            background-color: transparent !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            position: relative !important;
         }
 
-        /* --- MAIN WEBSITE STYLING --- */
-        body { 
-            background: #0f0f1a; 
-            color: #e0e0e0; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            margin: 0; 
-            padding-bottom: 50px; 
+        #goog-gt-tt, .goog-te-balloon-frame, .goog-te-tooltip, .goog-te-tooltip2, .goog-te-banner-frame {
+            display: none !important;
+            visibility: hidden !important;
         }
+        body { top: 0 !important; }
+
+        /* --- 2. LAYOUT & FORMATTING --- */
+        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding-bottom: 50px; }
+        header { background: #000; padding: 25px; text-align: center; border-bottom: 2px solid #00d4ff; }
+        h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; text-transform: uppercase; font-size: 2rem; }
         
-        header { 
-            background: #000; 
-            padding: 30px; 
-            text-align: center; 
-            border-bottom: 3px solid #00d4ff; 
-        }
-        
-        h1 { color: #00d4ff; margin: 0; letter-spacing: 4px; text-transform: uppercase; }
-        
-        #google_translate_element { text-align: center; margin: 15px 0; }
+        #google_translate_element { text-align: center; padding: 15px; background: #111; }
 
         #reading-timer { 
             position: fixed; top: 10px; right: 10px; background: #00d4ff; 
-            padding: 8px 15px; border-radius: 20px; border: 2px solid #fff; 
-            font-weight: bold; color: #000; z-index: 1000; display: none;
+            padding: 5px 15px; border-radius: 20px; color: #000; font-weight: bold; z-index: 9999; display: none;
         }
 
-        .filter-container { text-align: center; margin: 20px 0; }
-        
+        .filter-container { text-align: center; margin: 15px 0; }
         .filter-btn { 
-            background: #1a1a2e; border: 1px solid #00d4ff; color: white; 
-            padding: 8px 20px; margin: 5px; cursor: pointer; border-radius: 20px; 
+            background: #161625; border: 1px solid #333; color: #888; 
+            padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; transition: 0.3s;
         }
+        .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         
-        .filter-btn.active { background: #00d4ff; color: #000; font-weight: bold; }
-
-        .container { max-width: 850px; margin: 0 auto; padding: 15px; }
-
         .post-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 25px; 
-            border-radius: 15px; 
-            margin-bottom: 30px; 
-            border: 1px solid #333; 
+            background: #12121f; padding: 20px; border-radius: 12px; 
+            margin-bottom: 25px; border: 1px solid #222; overflow: hidden;
         }
         
-        .post-type { color: #00d4ff; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
+        .post-type { color: #00d4ff; font-size: 0.75rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        h2 { margin: 5px 0; color: #fff; font-size: 1.6rem; line-height: 1.3; }
+        .description { color: #ffcc00; margin-bottom: 15px; font-size: 1rem; display: block; border-bottom: 1px solid #222; padding-bottom: 10px; }
         
-        /* Heading aur description ab block ban kar aayenge */
-        h2 { margin: 15px 0; color: #fff; display: block; width: 100%; }
-        .description { color: #ffcc00; margin-bottom: 15px; font-style: italic; display: block; width: 100%; }
-        
-        /* Blog Content Formatting */
+        /* --- BLOG FORMATTING FIX --- */
         .blog-content { 
-            display: none; 
-            margin-top: 20px; 
-            padding-top: 20px; 
-            border-top: 1px solid #444; 
-            line-height: 1.8; 
-            white-space: pre-wrap; 
-            color: #d1d1d1; 
-            font-size: 1.15rem;
-            text-align: left;
+            display: none; margin-top: 15px; 
+            line-height: 1.8; font-size: 1.1rem; text-align: left;
+        }
+        
+        /* Topic-wise separation ke liye har line ko block banana */
+        .blog-line {
+            display: block;
+            margin-bottom: 15px;
+            clear: both;
         }
 
-        /* Buttons & Reactions */
         .read-more-btn { 
             background: #00d4ff; color: #000; border: none; 
-            padding: 10px 20 font-weight: bold; border-radius: 5px; cursor: pointer;
+            padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px;
         }
 
-        .reactions { display: flex; gap: 10px; margin: 20px 0; padding: 15px 0; border-top: 1px solid #333; }
-        .react-btn { background: #222; border: 1px solid #444; color: white; padding: 5px 12px; border-radius: 5px; cursor: pointer; }
-        
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 10px; overflow: hidden; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; background: #000; border-radius: 8px; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        footer { text-align: center; padding: 40px; color: #555; }
+        .reactions { margin: 20px 0; padding-top: 15px; border-top: 1px solid #333; display: flex; gap: 10px; }
+        .react-btn { background: #1c1c2e; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+
+        footer { text-align: center; padding: 30px; color: #444; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -127,7 +96,7 @@
 
 <div class="container" id="post-container">Loading...</div>
 
-<div id="universal-disqus" style="display:none; margin-top:20px;">
+<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
     <div id="disqus_thread"></div>
 </div>
 
@@ -135,10 +104,7 @@
 
 <script type="text/javascript">
 function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'hi', 
-    autoDisplay: false
-  }, 'google_translate_element');
+  new google.translate.TranslateElement({pageLanguage: 'hi', autoDisplay: false}, 'google_translate_element');
 }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -159,6 +125,12 @@ function googleTranslateElementInit() {
             postsData = json.table.rows;
             filterData('all');
         } catch (e) { console.error(e); }
+    }
+
+    function formatBlogText(text) {
+        if (!text) return '';
+        // Har line break ko ek 'blog-line' div mein convert karna taaki translation mix na ho
+        return text.split('\n').map(line => line.trim() ? `<span class="blog-line">${line}</span>` : '<br>').join('');
     }
 
     function startTimer() {
@@ -200,7 +172,7 @@ function googleTranslateElementInit() {
                         ${blogText ? `
                             <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index}, '${topic.replace(/'/g, "\\'")}')">Read Blog</button>
                             <div id="blog-box-${index}" class="blog-content">
-                                ${blogText}
+                                ${formatBlogText(blogText)}
                                 <div class="reactions">
                                     <button class="react-btn">🔥 Mast</button>
                                     <button class="react-btn">😱 Shocking</button>
