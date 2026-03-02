@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - Explore the Deep Mysteries</title>
+    <title>EK MYSTERY - The Ultimate Portal</title>
     
     <style>
-        /* Pura styling same hai, bas special word (link) ke liye alag CSS add kiya hai */
+        /* CSS Cleanup & Fixes */
         font, span, .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
         #goog-gt-tt, .goog-te-banner-frame { display: none !important; }
         body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; top: 0 !important; }
@@ -14,46 +14,49 @@
         h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; text-transform: uppercase; }
         
         #google_translate_element { text-align: center; padding: 10px; background: #111; }
+        #reading-timer { position: fixed; top: 10px; right: 10px; background: #00d4ff; padding: 5px 15px; border-radius: 20px; color: #000; font-weight: bold; z-index: 9999; display: none; }
+
         .filter-container { text-align: center; margin: 15px 0; }
-        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; }
+        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; font-weight: bold; }
         .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
         
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
-        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
+        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; position: relative; }
+        
+        h2 { margin: 10px 0; color: #fff; }
         .description { color: #ffcc00; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; display: block; }
         .blog-content { display: none; margin-top: 15px; line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
         
-        /* --- YAHAN HAI VO SPCIAL WORD KA COLOR CSS --- */
-        .special-word { 
-            color: #00d4ff; /* Ye wo Blue color hai jo tumhari site ka main theme hai */
-            text-decoration: underline; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-        .special-word:hover { 
-            color: #ffcc00; /* Jab mouse le jaoge toh ye Gold ho jayega */
-        }
+        /* Special Word Link Style */
+        .special-word { color: #00d4ff; text-decoration: underline; cursor: pointer; font-weight: bold; }
+        .special-word:hover { color: #ffcc00; }
         
         .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 8px; overflow: hidden; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        .reactions { margin: 20px 0; padding-top: 15px; border-top: 1px solid #333; display: flex; gap: 10px; }
+        .react-btn { background: #1c1c2e; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .react-btn:hover { background: #00d4ff; color: #000; }
+
         footer { text-align: center; padding: 30px; color: #444; }
     </style>
 </head>
 <body>
 
+<div id="reading-timer">Reading: <span id="timer-val">00:00</span></div>
 <header><h1>EK MYSTERY</h1></header>
 <div id="google_translate_element"></div>
 
 <div class="filter-container">
-    <button class="filter-btn active" onclick="filterData('all')">All</button>
-    <button class="filter-btn" onclick="filterData('Blog')">Blog</button>
-    <button class="filter-btn" onclick="filterData('Video')">Video</button>
-    <button class="filter-btn" onclick="filterData('News')">News</button>
+    <button class="filter-btn active" onclick="applyFilter('all', this)">All</button>
+    <button class="filter-btn" onclick="applyFilter('Blog', this)">Blog</button>
+    <button class="filter-btn" onclick="applyFilter('Video', this)">Video</button>
+    <button class="filter-btn" onclick="applyFilter('News', this)">News</button>
 </div>
 
-<div class="container" id="post-container">Loading...</div>
+<div class="container" id="post-container">Loading mysteries...</div>
 
 <div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
     <div id="disqus_thread"></div>
@@ -73,6 +76,8 @@ function googleTranslateElementInit() {
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
     let postsData = [];
+    let timerInterval;
+    let seconds = 0;
 
     async function loadData() {
         try {
@@ -80,81 +85,120 @@ function googleTranslateElementInit() {
             const text = await res.text();
             const json = JSON.parse(text.substr(47).slice(0, -2));
             postsData = json.table.rows;
-            displayPosts('all');
+            applyFilter('all');
         } catch (e) { console.error(e); }
     }
 
-    // Is function se hum text ke andar special words ko color denge aur links banayenge
     function linkSpecialWords(text) {
         let linkedText = text;
         postsData.forEach((row, index) => {
-            const topicName = row.c[0] ? row.c[0].v : '';
-            const status = row.c[5] ? row.c[5].v : '';
-
+            const topicName = row.c[0]?.v || '';
+            const status = row.c[5]?.v || '';
             if (topicName && status.toString().toLowerCase() === 'live') {
-                // Agar blog mein koi topic ka naam aata hai, toh use special style bana do
                 const regex = new RegExp(`\\b${topicName}\\b`, 'gi'); 
-                // YAHAN MAINE '.special-word' CLASS ADD KI HAI
                 linkedText = linkedText.replace(regex, `<span class="special-word" onclick="openTopic(${index})">${topicName}</span>`);
             }
         });
         return linkedText;
     }
 
-    function displayPosts(category) {
+    function startTimer() {
+        seconds = 0; document.getElementById('reading-timer').style.display = 'block';
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            seconds++;
+            let mins = Math.floor(seconds / 60); let secs = seconds % 60;
+            document.getElementById('timer-val').innerText = (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+        }, 1000);
+    }
+
+    function applyFilter(category, btnElement) {
+        if (btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+        
         const container = document.getElementById('post-container');
         let html = '';
+        document.getElementById('reading-timer').style.display = 'none';
+        clearInterval(timerInterval);
 
         postsData.forEach((row, index) => {
             const topic = row.c[0]?.v || '';
             const desc = row.c[1]?.v || '';
+            const link = row.c[2]?.v || '';
             const blogText = row.c[3]?.v || '';
+            const type = row.c[4]?.v || 'Blog';
             const status = row.c[5]?.v || '';
 
             if (status.toString().toLowerCase() === 'live') {
-                if (category === 'all' || row.c[4]?.v.toLowerCase() === category.toLowerCase()) {
+                if (category === 'all' || type.toLowerCase() === category.toLowerCase()) {
+                    let vId = link ? link.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/) : null;
+                    let videoHtml = vId ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>` : '';
+
                     html += `
                         <div class="post-card" id="post-${index}">
+                            <span style="color:#00d4ff; font-size:12px; font-weight:bold;">${type}</span>
                             <h2>${topic}</h2>
                             <div class="description">${desc}</div>
-                            <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Blog</button>
-                            <div id="blog-box-${index}" class="blog-content">
-                                ${linkSpecialWords(blogText)}
-                            </div>
+                            ${videoHtml}
+                            ${blogText ? `
+                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index}, '${topic.replace(/'/g, "\\'")}')">Read Blog</button>
+                                <div id="blog-box-${index}" class="blog-content">
+                                    ${linkSpecialWords(blogText)}
+                                    <div class="reactions">
+                                        <button class="react-btn">🔥 Mast</button>
+                                        <button class="react-btn">😱 Shocking</button>
+                                        <button class="react-btn">❤️ Love</button>
+                                    </div>
+                                    <div id="comment-anchor-${index}"></div>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 }
             }
         });
-        container.innerHTML = html;
+        container.innerHTML = html || "<p style='text-align:center;'>Bhai, kuch nahi mila. Status check karo!</p>";
     }
 
-    function toggleBlog(index) {
+    function toggleBlog(index, title) {
         const content = document.getElementById(`blog-box-${index}`);
         const btn = document.getElementById(`btn-${index}`);
+        const disqusHolder = document.getElementById('universal-disqus');
+        const anchor = document.getElementById(`comment-anchor-${index}`);
+
         if (content.style.display === "block") {
-            content.style.display = "none";
-            btn.innerText = "Read Blog";
+            content.style.display = "none"; btn.innerText = "Read Blog";
+            document.getElementById('reading-timer').style.display = 'none';
+            clearInterval(timerInterval); disqusHolder.style.display = "none";
         } else {
-            content.style.display = "block";
-            btn.innerText = "Close Blog";
+            document.querySelectorAll('.blog-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.read-more-btn').forEach(el => el.innerText = 'Read Blog');
+            content.style.display = "block"; btn.innerText = "Close Blog";
+            startTimer();
+            anchor.appendChild(disqusHolder); disqusHolder.style.display = "block";
+            
+            if (typeof DISQUS !== 'undefined') {
+                DISQUS.reset({ reload: true, config: function () { this.page.identifier = 'blog-' + index; this.page.title = title; } });
+            } else {
+                var d = document, s = d.createElement('script'); s.src = 'https://ek-mystery.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s);
+            }
         }
     }
 
-    // Jab koi special word par click karega, wo us topic wale card par jump karega
     function openTopic(index) {
-        const targetPost = document.getElementById(`post-${index}`);
-        targetPost.scrollIntoView({ behavior: 'smooth' });
-        
-        // Agar wo band hai toh use khol do
-        const content = document.getElementById(`blog-box-${index}`);
-        const btn = document.getElementById(`btn-${index}`);
-        content.style.display = "block";
-        btn.innerText = "Close Blog";
-        
-        // Thoda highlight effect (2 second ke liye border chamkega)
-        targetPost.style.border = "2px solid #00d4ff";
-        setTimeout(() => { targetPost.style.border = "1px solid #222"; }, 2000);
+        applyFilter('all');
+        setTimeout(() => {
+            const target = document.getElementById(`post-${index}`);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+                toggleBlog(index, postsData[index].c[0].v);
+                target.style.boxShadow = "0 0 20px #00d4ff";
+                setTimeout(() => { target.style.boxShadow = "none"; }, 3000);
+            }
+        }, 500);
     }
 
     loadData();
