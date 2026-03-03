@@ -16,7 +16,7 @@
 
         /* Navbar */
         .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 2px solid #00d4ff; z-index: 10005; }
-        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; text-transform: uppercase; cursor: pointer; }
+        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; text-transform: uppercase; cursor: pointer; text-shadow: 0 0 10px #00d4ff; }
         .menu-toggle { color: #00d4ff; font-size: 28px; cursor: pointer; background: none; border: none; }
 
         /* Side Menu */
@@ -28,18 +28,26 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 10004; }
         .overlay.active { display: block; }
 
-        /* Install App Button */
-        #btnInstall { display: none; background: #00d4ff; color: #000; font-weight: bold; margin: 15px; border-radius: 8px; text-align: center; border:none; padding:15px; width:calc(100% - 30px); cursor:pointer; }
-
         /* Post Cards */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
-        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin: 15px 0; }
+        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .post-card h2 { color: #fff; margin-bottom: 10px; }
+        
+        /* Video Container */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin: 15px 0; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         
-        /* Blog/Comment Content */
-        .blog-content { display: none; background: #fff; color: #111; padding: 20px; border-radius: 8px; margin-top: 15px; white-space: pre-wrap; line-height: 1.6; }
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; margin-top:10px; }
+        /* Action Buttons (Share & Comment) */
+        .action-bar { display: flex; gap: 10px; margin: 15px 0; padding-top: 10px; border-top: 1px solid #333; }
+        .action-btn { flex: 1; background: #1a1a2e; border: 1px solid #00d4ff; color: #00d4ff; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .action-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 10px #00d4ff; }
+
+        /* Blog Content Area */
+        .blog-content { display: none; background: #fff; color: #111; padding: 20px; border-radius: 8px; margin-top: 15px; white-space: pre-wrap; line-height: 1.6; font-size: 16px; }
+        .read-more-btn { background: linear-gradient(90deg, #00d4ff, #008fb3); color: #000; border: none; padding: 14px; border-radius: 6px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; }
+        
+        /* Disqus Container */
+        .disqus-box { margin-top: 20px; padding: 10px; background: #fdfdfd; border-radius: 8px; display: none; }
     </style>
 </head>
 <body>
@@ -52,52 +60,26 @@
     <div id="overlay" class="overlay" onclick="closeMenu()"></div>
 
     <div id="sideMenu" class="side-menu">
-        <div style="text-align:right; padding:10px 20px; color:red; cursor:pointer;" onclick="closeMenu()">✕ CLOSE</div>
+        <div style="text-align:right; padding:10px 20px; color:red; cursor:pointer; font-weight:bold;" onclick="closeMenu()">✕ CLOSE</div>
         <a onclick="filterBy('all')"><i class="fas fa-home"></i> Home</a>
         <a onclick="filterBy('Blog')"><i class="fas fa-book-open"></i> Mystery Blogs</a>
         <a onclick="filterBy('Video')"><i class="fas fa-play-circle"></i> Videos</a>
-        
         <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
         <a href="https://api.whatsapp.com/send?phone=918077011871" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
         <a href="mailto:admin@ekmystery.com"><i class="fas fa-envelope"></i> Email Support</a>
-        
-        <button id="btnInstall" onclick="installApp()"><i class="fas fa-download"></i> INSTALL APP</button>
     </div>
 
-    <div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
+    <div class="container" id="post-container">Andhera chha raha hai, mysteries load ho rahi hain...</div>
 
 <script>
-    // 1. SERVICE WORKER REGISTRATION (Naya Wala)
+    // Service Worker
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('SW Registered!'))
-            .catch(err => console.log('SW Error:', err));
-        });
+        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
     }
 
-    // 2. INSTALL APP LOGIC
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('btnInstall').style.display = 'block';
-    });
-
-    async function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            document.getElementById('btnInstall').style.display = 'none';
-        }
-    }
-
-    // 3. MENU CONTROLS
     function openMenu() { document.getElementById('sideMenu').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
     function closeMenu() { document.getElementById('sideMenu').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
 
-    // 4. DATA LOADING & FILTERING
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
     let allData = [];
@@ -109,7 +91,7 @@
             const json = JSON.parse(text.substr(47).slice(0, -2));
             allData = json.table.rows;
             displayPosts('all');
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Data load fail!", e); }
     }
 
     function filterBy(type) { displayPosts(type); closeMenu(); }
@@ -137,22 +119,73 @@
                             <h2>${topic}</h2>
                             <p>${desc}</p>
                             ${vHtml}
+                            
+                            <div class="action-bar">
+                                <button class="action-btn" onclick="shareMe('${topic}')"><i class="fas fa-share-alt"></i> Share</button>
+                                <button class="action-btn" onclick="openComments(${index}, '${topic}')"><i class="fas fa-comments"></i> Comment</button>
+                            </div>
+
                             ${blog ? `
-                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button>
-                                <div id="blog-box-${index}" class="blog-content">${blog}</div>
+                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Story</button>
+                                <div id="blog-box-${index}" class="blog-content">
+                                    ${blog}
+                                    <div id="disqus_thread_${index}" class="disqus-box"></div>
+                                </div>
                             ` : ''}
                         </div>`;
                 }
             }
         });
-        document.getElementById('post-container').innerHTML = html || "No Posts Found.";
+        document.getElementById('post-container').innerHTML = html;
     }
 
     function toggleBlog(i) {
         const b = document.getElementById(`blog-box-${i}`);
         const btn = document.getElementById(`btn-${i}`);
-        if(b.style.display === "block") { b.style.display = "none"; btn.innerText = "Read Full Mystery"; }
-        else { b.style.display = "block"; btn.innerText = "Close Mystery"; }
+        if(b.style.display === "block") { b.style.display = "none"; btn.innerText = "Read Full Story"; }
+        else { b.style.display = "block"; btn.innerText = "Close Story"; }
+    }
+
+    // DISQUS SYSTEM (Already set to ek-mystery)
+    function openComments(i, title) {
+        const blogBox = document.getElementById(`blog-box-${i}`);
+        const disqusBox = document.getElementById(`disqus_thread_${i}`);
+        
+        if(blogBox.style.display !== "block") toggleBlog(i);
+        
+        disqusBox.style.display = "block";
+        
+        window.disqus_config = function () {
+            this.page.url = window.location.href + "#mystery-" + i;
+            this.page.identifier = "mystery-" + i;
+            this.page.title = title;
+        };
+
+        if (!document.getElementById('disqus-script')) {
+            var d = document, s = d.createElement('script');
+            s.id = 'disqus-script';
+            s.src = 'https://ek-mystery.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        } else {
+            DISQUS.reset({
+                reload: true,
+                config: function () {
+                    this.page.identifier = "mystery-" + i;
+                    this.page.url = window.location.href + "#mystery-" + i;
+                    this.page.title = title;
+                }
+            });
+        }
+    }
+
+    // SHARE SYSTEM
+    function shareMe(title) {
+        if (navigator.share) {
+            navigator.share({ title: title, text: 'Check out this mystery: ' + title, url: window.location.href });
+        } else {
+            alert("Copy link to share!");
+        }
     }
 
     loadData();
