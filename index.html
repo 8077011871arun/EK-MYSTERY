@@ -8,7 +8,6 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00d4ff">
     <meta name="mobile-web-app-capable" content="yes">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
@@ -18,31 +17,29 @@
         /* Navbar */
         .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 65px; background: #000; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 2px solid #00d4ff; z-index: 10005; }
         .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; text-transform: uppercase; cursor: pointer; }
-        .menu-toggle { color: #00d4ff; font-size: 28px; cursor: pointer; background: none; border: none; outline: none; }
+        .menu-toggle { color: #00d4ff; font-size: 28px; cursor: pointer; background: none; border: none; }
 
-        /* Side Menu Drawer */
-        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #111; border-right: 2px solid #00d4ff; transition: 0.4s ease; z-index: 10006; padding-top: 20px; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        /* Side Menu */
+        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #111; border-right: 2px solid #00d4ff; transition: 0.4s ease; z-index: 10006; padding-top: 20px; }
         .side-menu.active { left: 0; }
-        .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; cursor: pointer; }
         .side-menu a i { width: 30px; color: #00d4ff; }
-        .side-menu a:hover { background: #00d4ff; color: #000; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 10004; }
         .overlay.active { display: block; }
 
-        /* Install App Button in Menu */
-        #btnInstall { display: none; background: #00d4ff; color: #000; font-weight: bold; margin: 20px 10px; border-radius: 8px; text-align: center; }
+        /* Install App Button */
+        #btnInstall { display: none; background: #00d4ff; color: #000; font-weight: bold; margin: 15px; border-radius: 8px; text-align: center; border:none; padding:15px; width:calc(100% - 30px); cursor:pointer; }
 
-        /* Content Post Cards */
+        /* Post Cards */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
-        .post-card h2 { color: #fff; margin: 10px 0; font-size: 1.3rem; }
-        
-        /* Video & Blog Display */
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin: 15px 0; background: #000; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin: 15px 0; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        /* Blog/Comment Content */
         .blog-content { display: none; background: #fff; color: #111; padding: 20px; border-radius: 8px; margin-top: 15px; white-space: pre-wrap; line-height: 1.6; }
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; }
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; margin-top:10px; }
     </style>
 </head>
 <body>
@@ -55,31 +52,31 @@
     <div id="overlay" class="overlay" onclick="closeMenu()"></div>
 
     <div id="sideMenu" class="side-menu">
-        <div style="text-align:right; padding:0 20px 15px; color:red; cursor:pointer; font-weight:bold;" onclick="closeMenu()">✕ CLOSE</div>
-        
+        <div style="text-align:right; padding:10px 20px; color:red; cursor:pointer;" onclick="closeMenu()">✕ CLOSE</div>
         <a onclick="filterBy('all')"><i class="fas fa-home"></i> Home</a>
         <a onclick="filterBy('Blog')"><i class="fas fa-book-open"></i> Mystery Blogs</a>
         <a onclick="filterBy('Video')"><i class="fas fa-play-circle"></i> Videos</a>
         
         <hr style="border:0; border-top:1px solid #333; margin:10px 0;">
-        
         <a href="https://api.whatsapp.com/send?phone=918077011871" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Us</a>
         <a href="mailto:admin@ekmystery.com"><i class="fas fa-envelope"></i> Email Support</a>
         
-        <a id="btnInstall" onclick="installApp()"><i class="fas fa-download"></i> INSTALL APP</a>
+        <button id="btnInstall" onclick="installApp()"><i class="fas fa-download"></i> INSTALL APP</button>
     </div>
 
     <div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
 
 <script>
-    // 1. Service Worker Registration
+    // 1. SERVICE WORKER REGISTRATION (Naya Wala)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGUgPT4gZS5yZXNwb25kV2l0aChmZXRjaChlLnJlcXVlc3QpKSk7');
+            navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('SW Registered!'))
+            .catch(err => console.log('SW Error:', err));
         });
     }
 
-    // 2. Install App Logic
+    // 2. INSTALL APP LOGIC
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -90,17 +87,17 @@
     async function installApp() {
         if (deferredPrompt) {
             deferredPrompt.prompt();
-            await deferredPrompt.userChoice;
+            const { outcome } = await deferredPrompt.userChoice;
             deferredPrompt = null;
             document.getElementById('btnInstall').style.display = 'none';
         }
     }
 
-    // 3. Menu Controls
+    // 3. MENU CONTROLS
     function openMenu() { document.getElementById('sideMenu').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
     function closeMenu() { document.getElementById('sideMenu').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
 
-    // 4. Google Sheets & Filtering
+    // 4. DATA LOADING & FILTERING
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
     let allData = [];
@@ -112,7 +109,7 @@
             const json = JSON.parse(text.substr(47).slice(0, -2));
             allData = json.table.rows;
             displayPosts('all');
-        } catch (e) { document.getElementById('post-container').innerHTML = "Sheet Connect Nahi Hui!"; }
+        } catch (e) { console.error(e); }
     }
 
     function filterBy(type) { displayPosts(type); closeMenu(); }
@@ -134,13 +131,17 @@
                         let vId = video.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/);
                         if (vId) vHtml = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>`;
                     }
-                    html += `<div class="post-card">
-                        <span style="color:#00d4ff; font-size:11px; font-weight:bold;">${type.toUpperCase()}</span>
-                        <h2>${topic}</h2>
-                        <p>${desc}</p>
-                        ${vHtml}
-                        ${blog ? `<button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button><div id="blog-box-${index}" class="blog-content">${blog}</div>` : ''}
-                    </div>`;
+                    html += `
+                        <div class="post-card">
+                            <span style="color:#00d4ff; font-size:11px; font-weight:bold;">${type.toUpperCase()}</span>
+                            <h2>${topic}</h2>
+                            <p>${desc}</p>
+                            ${vHtml}
+                            ${blog ? `
+                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button>
+                                <div id="blog-box-${index}" class="blog-content">${blog}</div>
+                            ` : ''}
+                        </div>`;
                 }
             }
         });
@@ -153,6 +154,7 @@
         if(b.style.display === "block") { b.style.display = "none"; btn.innerText = "Read Full Mystery"; }
         else { b.style.display = "block"; btn.innerText = "Close Mystery"; }
     }
+
     loadData();
 </script>
 </body>
