@@ -5,43 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EK MYSTERY - Official App</title>
     
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzaG9ydF9uYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGExMiIsCiAgInRoZW1lX2NvbG9yIjogIzAwZDRmZiIsCiAgInljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzExNTUvMTE1NTAyNi5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzaG9ydF9uYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGExMiIsCiAgInRoZW1lX2NvbG9yIjogIzAwZDRmZiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzExNTUvMTE1NTAyNi5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
     <meta name="theme-color" content="#00d4ff">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         * { box-sizing: border-box; }
-        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-top: 70px; }
+        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-top: 75px; }
 
-        /* NAVBAR */
+        /* Navbar */
         .navbar { 
             position: fixed; top: 0; left: 0; width: 100%; height: 65px;
             background: #000; display: flex; justify-content: space-between; 
             align-items: center; padding: 0 20px; border-bottom: 2px solid #00d4ff; z-index: 10005; 
         }
-        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; cursor: pointer; }
+        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.4rem; cursor: pointer; text-transform: uppercase; }
         .menu-toggle { color: #00d4ff; font-size: 28px; cursor: pointer; background: none; border: none; }
 
-        /* SIDE MENU (WORKING LINKS) */
+        /* Side Menu */
         .side-menu {
             position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
             background: #111; border-right: 2px solid #00d4ff;
             transition: 0.4s ease; z-index: 10006; padding-top: 20px;
         }
         .side-menu.active { left: 0; }
-        .side-menu a { 
-            display: block; padding: 15px 25px; color: #fff; 
-            text-decoration: none; font-size: 1.1rem; border-bottom: 1px solid #222; cursor: pointer;
-        }
+        .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; cursor: pointer; }
         .side-menu a:hover { background: #00d4ff; color: #000; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 10004; }
         .overlay.active { display: block; }
 
-        /* CARDS */
+        /* Content Cards */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        .post-card h2 { color: #fff; margin: 10px 0; font-size: 1.3rem; }
+        .description { color: #ffcc00; margin-bottom: 15px; display: block; font-size: 0.95rem; }
+
+        /* Video Container */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 15px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* Blog Content */
+        .blog-content { 
+            display: none; background: #ffffff; color: #1a1a1a; padding: 25px; 
+            border-radius: 8px; line-height: 1.7; margin-top: 15px; white-space: pre-wrap;
+        }
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        
+        /* Install Button */
+        #installBtn { color: #00d4ff !important; font-weight: bold; border: 2px solid #00d4ff !important; margin: 10px; border-radius: 8px; text-align: center; }
     </style>
 </head>
 <body>
@@ -56,51 +68,40 @@
     <div id="sideMenu" class="side-menu">
         <div style="text-align:right; padding:10px 20px; color:red; cursor:pointer;" onclick="closeMenu()">✕ CLOSE</div>
         <a onclick="filterBy('all')"><i class="fas fa-home"></i> Home</a>
-        <a onclick="filterBy('News')"><i class="fas fa-bolt"></i> Latest Stories</a>
-        <a onclick="filterBy('Video')"><i class="fas fa-video"></i> Videos</a>
-        <a href="mailto:admin@ekmystery.com"><i class="fas fa-envelope"></i> Contact</a>
-        <hr style="border:1px solid #333">
-        <a id="installBtn" style="display:none; color:#00d4ff; font-weight:bold;"><i class="fas fa-download"></i> INSTALL APP</a>
+        <a onclick="filterBy('Blog')"><i class="fas fa-book-open"></i> Latest Blogs</a>
+        <a onclick="filterBy('Video')"><i class="fas fa-play-circle"></i> Videos</a>
+        <a onclick="filterBy('News')"><i class="fas fa-newspaper"></i> Mystery News</a>
+        <a id="installBtn" style="display:none;"><i class="fas fa-download"></i> INSTALL APP</a>
     </div>
 
     <div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
 
 <script>
-    // 1. SERVICE WORKER (App banane ke liye zaruri)
+    // PWA Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsgfSk7');
     }
 
-    // 2. MENU FUNCTIONS
-    function openMenu() {
-        document.getElementById('sideMenu').classList.add('active');
-        document.getElementById('overlay').classList.add('active');
-    }
-    function closeMenu() {
-        document.getElementById('sideMenu').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-    }
+    // Menu Controls
+    function openMenu() { document.getElementById('sideMenu').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
+    function closeMenu() { document.getElementById('sideMenu').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
 
-    // 3. INSTALL APP LOGIC (Add to Home Screen button)
+    // Install Prompt
     let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.style.display = 'block'; // Install button dikhao
+        e.preventDefault(); deferredPrompt = e;
+        document.getElementById('installBtn').style.display = 'block';
     });
-
-    installBtn.addEventListener('click', async () => {
+    document.getElementById('installBtn').addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
+            await deferredPrompt.userChoice;
             deferredPrompt = null;
-            installBtn.style.display = 'none';
+            document.getElementById('installBtn').style.display = 'none';
         }
     });
 
-    // 4. DATA LOADING & FILTERING
+    // Data Handling
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
     let allPosts = [];
@@ -112,33 +113,62 @@
             const json = JSON.parse(text.substr(47).slice(0, -2));
             allPosts = json.table.rows;
             displayPosts('all');
-        } catch (e) { console.log(e); }
+        } catch (e) { document.getElementById('post-container').innerHTML = "Bhai error: " + e; }
     }
 
-    function filterBy(type) {
-        displayPosts(type);
-        closeMenu(); // Click ke baad menu band ho jaye
-    }
+    function filterBy(type) { displayPosts(type); closeMenu(); }
 
-    function displayPosts(type) {
+    function displayPosts(filterType) {
         let html = '';
-        allPosts.forEach(row => {
+        allPosts.forEach((row, index) => {
             const topic = row.c[0]?.v || '';
             const desc = row.c[1]?.v || '';
+            const videoLink = row.c[2]?.v || '';
+            const blogText = row.c[3]?.v || '';
             const category = row.c[4]?.v || 'Blog';
             const status = row.c[5]?.v || '';
 
             if (status.toLowerCase() === 'live') {
-                if (type === 'all' || category.toLowerCase() === type.toLowerCase()) {
-                    html += `<div class="post-card">
-                        <h2>${topic}</h2>
-                        <p>${desc}</p>
-                        <button class="read-more-btn">Read Story</button>
-                    </div>`;
+                if (filterType === 'all' || category.toLowerCase() === filterType.toLowerCase()) {
+                    
+                    // Video Logic
+                    let videoHtml = '';
+                    if (videoLink) {
+                        let vId = videoLink.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/);
+                        if (vId) videoHtml = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>`;
+                    }
+
+                    // Blog Logic
+                    let blogHtml = blogText ? `
+                        <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index})">Read Full Mystery</button>
+                        <div id="blog-box-${index}" class="blog-content">${blogText}</div>
+                    ` : '';
+
+                    html += `
+                        <div class="post-card">
+                            <span style="color:#00d4ff; font-size:11px; font-weight:bold; text-transform:uppercase;">${category}</span>
+                            <h2>${topic}</h2>
+                            <span class="description">${desc}</span>
+                            ${videoHtml}
+                            ${blogHtml}
+                        </div>
+                    `;
                 }
             }
         });
-        document.getElementById('post-container').innerHTML = html || "<p style='text-align:center;'>No posts found.</p>";
+        document.getElementById('post-container').innerHTML = html || "<p style='text-align:center;'>Bhai yahan abhi kuch nahi hai!</p>";
+    }
+
+    function toggleBlog(index) {
+        const box = document.getElementById(`blog-box-${index}`);
+        const btn = document.getElementById(`btn-${index}`);
+        if (box.style.display === "block") {
+            box.style.display = "none";
+            btn.innerText = "Read Full Mystery";
+        } else {
+            box.style.display = "block";
+            btn.innerText = "Close Mystery";
+        }
     }
 
     loadData();
