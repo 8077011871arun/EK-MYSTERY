@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EK MYSTERY - Official & AI Assistant</title>
+    <title>EK MYSTERY - Official App</title>
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="EK MYSTERY">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1155/1155026.png">
     
     <style>
-        /* --- GLOBAL & CLEANUP --- */
+        /* CSS Cleanup */
         font, span, .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
         #goog-gt-tt, .goog-te-banner-frame { display: none !important; }
-        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; top: 0 !important; overflow-x: hidden; }
         
-        /* --- HEADER --- */
+        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; top: 0 !important; }
+        
         header { background: #000; padding: 25px; text-align: center; border-bottom: 3px solid #00d4ff; }
-        header h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; text-transform: uppercase; font-size: 2rem; }
+        h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; text-transform: uppercase; }
         
         #google_translate_element { text-align: center; padding: 10px; background: #111; }
+        #reading-timer { position: fixed; top: 10px; right: 10px; background: #00d4ff; padding: 5px 15px; border-radius: 20px; color: #000; font-weight: bold; z-index: 9999; display: none; }
 
-        /* --- FILTERS --- */
         .filter-container { text-align: center; margin: 15px 0; }
-        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; font-weight: bold; }
         .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
         
-        /* --- MAIN CONTAINER --- */
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
-        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; position: relative; }
+        .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
+        
         h2 { margin: 10px 0; color: #fff; }
         .description { color: #ffcc00; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; display: block; }
 
-        /* --- BLOG CONTENT (WHITE BACKGROUND) --- */
+        /* BLOG CONTENT */
         .blog-content { 
             display: none; 
             margin-top: 20px; 
@@ -41,52 +46,30 @@
             white-space: pre-wrap; 
             box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
-        
+
         .blog-content b, .blog-content strong {
             color: #b30000 !important;
+            font-size: 1.3rem;
             display: block;
-            margin-top: 20px;
-            font-size: 1.4rem;
-            border-left: 5px solid #b30000;
+            margin-top: 15px;
+            border-left: 4px solid #b30000;
             padding-left: 10px;
         }
 
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        
+        /* IMPRESSION BUTTONS */
+        .reactions { margin: 20px 0; padding: 15px 0; border-top: 2px solid #eee; display: flex; gap: 10px; justify-content: center; }
+        .react-btn { background: #f8f9fa; border: 1px solid #ddd; color: #333; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
 
-        /* --- IMPRESSION BUTTONS STYLE --- */
-        .impression-container {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-        .imp-btn {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #333;
-        }
-        .imp-btn:hover { background: #00d4ff; color: #000; border-color: #00d4ff; }
-        .imp-btn span { font-size: 18px; }
-
-        /* --- AI CHATBOT --- */
-        #ai-app-launcher { position: fixed; bottom: 20px; left: 20px; background: #00d4ff; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 5px 20px rgba(0,212,255,0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; }
-        #ai-window { position: fixed; bottom: 90px; left: 20px; width: 320px; height: 450px; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; flex-direction: column; overflow: hidden; z-index: 10000; border: 2px solid #00d4ff; }
-        .ai-header { background: #00d4ff; padding: 15px; color: #000; font-weight: bold; display: flex; justify-content: space-between; }
-        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: #f4f4f4; display: flex; flex-direction: column; gap: 10px; color: #333; }
-        .ai-input-area { padding: 10px; border-top: 1px solid #ddd; display: flex; gap: 5px; background: #fff; }
-        .ai-input-area input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
-        .ai-input-area button { background: #00d4ff; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        /* AI APP UI */
+        #ai-launcher { position: fixed; bottom: 20px; left: 20px; background: #00d4ff; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 5px 20px rgba(0,212,255,0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; font-size: 30px; }
+        #ai-window { position: fixed; bottom: 90px; left: 20px; width: 320px; height: 450px; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border: 2px solid #00d4ff; overflow: hidden; }
+        .ai-head { background: #00d4ff; padding: 15px; color: #000; font-weight: bold; display: flex; justify-content: space-between; }
+        #ai-msg-container { flex: 1; padding: 15px; overflow-y: auto; background: #f4f4f4; display: flex; flex-direction: column; gap: 10px; color: #333; font-size: 14px; }
+        .ai-input-box { padding: 10px; border-top: 1px solid #ddd; display: flex; gap: 5px; background: #fff; }
+        .ai-input-box input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
+        .ai-input-box button { background: #00d4ff; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         footer { text-align: center; padding: 30px; color: #444; }
     </style>
@@ -103,24 +86,21 @@
     <button class="filter-btn" onclick="applyFilter('News', this)">News</button>
 </div>
 
-<div class="container" id="post-container">Data Loading...</div>
+<div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
 
-<div id="ai-app-launcher" onclick="toggleChat()">🤖</div>
+<div id="ai-launcher" onclick="toggleChat()">🤖</div>
 <div id="ai-window">
-    <div class="ai-header">
-        <span>MYSTERY AI</span>
-        <span onclick="toggleChat()" style="cursor:pointer">×</span>
+    <div class="ai-head"><span>MYSTERY AI</span> <span onclick="toggleChat()" style="cursor:pointer">×</span></div>
+    <div id="ai-msg-container">
+        <div style="background:#e1f5fe; padding:8px; border-radius:8px; align-self:flex-start;">Oye Dakkan! Bol kya janna hai?</div>
     </div>
-    <div id="chat-messages">
-        <div style="background:#e1f5fe; padding:10px; border-radius:10px; align-self:flex-start;">Oye Dakkan! Kuch rahasya jaan-na hai?</div>
-    </div>
-    <div class="ai-input-area">
-        <input type="text" id="user-ai-input" placeholder="Type here...">
-        <button onclick="sendAiMessage()">Bhejo</button>
+    <div class="ai-input-box">
+        <input type="text" id="ai-typing" placeholder="Ask me...">
+        <button onclick="askAI()">Bhejo</button>
     </div>
 </div>
 
-<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
+<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px; color: #333; border-top: 2px solid #00d4ff;">
     <div id="disqus_thread"></div>
 </div>
 
@@ -138,6 +118,8 @@ function googleTranslateElementInit() {
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
     let postsData = [];
+    let timerInterval;
+    let seconds = 0;
 
     async function loadData() {
         try {
@@ -154,25 +136,25 @@ function googleTranslateElementInit() {
         win.style.display = (win.style.display === "none" || win.style.display === "") ? "flex" : "none";
     }
 
-    function sendAiMessage() {
-        const input = document.getElementById('user-ai-input');
-        const msgArea = document.getElementById('chat-messages');
-        if (!input.value.trim()) return;
-
-        let uMsg = document.createElement('div');
-        uMsg.style = "background:#00d4ff; color:#000; padding:10px; border-radius:10px; align-self:flex-end; max-width:80%; font-size:14px;";
-        uMsg.innerText = input.value;
-        msgArea.appendChild(uMsg);
+    function askAI() {
+        const inp = document.getElementById('ai-typing');
+        const box = document.getElementById('ai-msg-container');
+        if(!inp.value.trim()) return;
+        
+        let uM = document.createElement('div');
+        uM.style = "background:#00d4ff; color:#000; padding:8px; border-radius:8px; align-self:flex-end; max-width:80%";
+        uM.innerText = inp.value;
+        box.appendChild(uM);
 
         setTimeout(() => {
-            let aMsg = document.createElement('div');
-            aMsg.style = "background:#e1f5fe; color:#333; padding:10px; border-radius:10px; align-self:flex-start; max-width:80%; font-size:14px;";
-            aMsg.innerText = "Abhi dimaag load ho raha hai, tab tak blog padh le fufa!";
-            msgArea.appendChild(aMsg);
-            msgArea.scrollTop = msgArea.scrollHeight;
+            let aM = document.createElement('div');
+            aM.style = "background:#e1f5fe; color:#333; padding:8px; border-radius:8px; align-self:flex-start; max-width:80%";
+            aM.innerText = "Abhi dimaag thanda hai fufa, next update mein tere se ladunga!";
+            box.appendChild(aM);
+            box.scrollTop = box.scrollHeight;
         }, 800);
-        input.value = "";
-        msgArea.scrollTop = msgArea.scrollHeight;
+        inp.value = "";
+        box.scrollTop = box.scrollHeight;
     }
 
     function applyFilter(category, btnElement) {
@@ -204,15 +186,12 @@ function googleTranslateElementInit() {
                             ${blogText ? `
                                 <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index}, '${topic.replace(/'/g, "\\'")}')">Read Blog</button>
                                 <div id="blog-box-${index}" class="blog-content">
-                                    <div class="blog-text-area">${blogText}</div>
-                                    
-                                    <div class="impression-container">
-                                        <button class="imp-btn" onclick="alert('Mast!')"><span>🔥</span> Mast</button>
-                                        <button class="imp-btn" onclick="alert('Shocking!')"><span>😱</span> Shocking</button>
-                                        <button class="imp-btn" onclick="alert('Gyaan!')"><span>🧠</span> Gyaan Mila</button>
+                                    ${blogText}
+                                    <div class="reactions">
+                                        <button class="react-btn" onclick="alert('Mast!')">🔥 Mast</button>
+                                        <button class="react-btn" onclick="alert('Shocking!')">😱 Shocking</button>
                                     </div>
-
-                                    <div id="disqus-placeholder-${index}" style="margin-top:20px;"></div>
+                                    <div id="comment-anchor-${index}"></div>
                                 </div>
                             ` : ''}
                         </div>
@@ -220,27 +199,23 @@ function googleTranslateElementInit() {
                 }
             }
         });
-        container.innerHTML = html || "<p style='text-align:center;'>No Data Found!</p>";
+        container.innerHTML = html || "<p style='text-align:center;'>Kuch nahi mila!</p>";
     }
 
     function toggleBlog(index, title) {
         const content = document.getElementById(`blog-box-${index}`);
         const btn = document.getElementById(`btn-${index}`);
         const disqusHolder = document.getElementById('universal-disqus');
-        const placeholder = document.getElementById(`disqus-placeholder-${index}`);
+        const anchor = document.getElementById(`comment-anchor-${index}`);
 
         if (content.style.display === "block") {
             content.style.display = "none"; btn.innerText = "Read Blog";
             disqusHolder.style.display = "none";
         } else {
             content.style.display = "block"; btn.innerText = "Close Blog";
-            placeholder.appendChild(disqusHolder);
-            disqusHolder.style.display = "block";
+            anchor.appendChild(disqusHolder); disqusHolder.style.display = "block";
             if (typeof DISQUS !== 'undefined') {
                 DISQUS.reset({ reload: true, config: function () { this.page.identifier = 'blog-' + index; this.page.title = title; } });
-            } else {
-                var d = document, s = d.createElement('script'); s.src = 'https://ek-mystery.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s);
             }
         }
     }
