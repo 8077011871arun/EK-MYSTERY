@@ -5,121 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EK MYSTERY - Official App</title>
     
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzaG9ydF9uYW1lIjogIkVLIU1ZU1RFUlkiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhMGExMiIsCiAgInRoZW1lX2NvbG9yIjogIzAwZDRmZiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzExNTUvMTE1NTAyNi5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <meta name="theme-color" content="#00d4ff">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="EK MYSTERY">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1155/1155026.png">
-    
-    <style>
-        /* CSS Cleanup */
-        font, span, .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
-        #goog-gt-tt, .goog-te-banner-frame { display: none !important; }
-        
-        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; top: 0 !important; }
-        
-        header { background: #000; padding: 25px; text-align: center; border-bottom: 3px solid #00d4ff; }
-        h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; text-transform: uppercase; }
-        
-        #google_translate_element { text-align: center; padding: 10px; background: #111; }
-        #reading-timer { position: fixed; top: 10px; right: 10px; background: #00d4ff; padding: 5px 15px; border-radius: 20px; color: #000; font-weight: bold; z-index: 9999; display: none; }
 
-        .filter-container { text-align: center; margin: 15px 0; }
-        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
+    <style>
+        /* Global Reset */
+        body { background: #0a0a12; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; padding-top: 60px; }
         
+        /* TOP NAVIGATION MENU (NEW) */
+        .navbar { 
+            position: fixed; top: 0; width: 100%; background: #000; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 20px; border-bottom: 2px solid #00d4ff; z-index: 10002; 
+        }
+        .navbar .logo { color: #00d4ff; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+        .menu-icon { color: #00d4ff; font-size: 24px; cursor: pointer; }
+
+        /* SIDE DRAWER MENU */
+        .side-menu {
+            position: fixed; top: 0; right: -250px; width: 250px; height: 100%;
+            background: #111; border-left: 2px solid #00d4ff;
+            transition: 0.3s; z-index: 10003; padding-top: 60px;
+        }
+        .side-menu a { display: block; padding: 15px 25px; color: #fff; text-decoration: none; border-bottom: 1px solid #222; }
+        .side-menu a:hover { background: #00d4ff; color: #000; }
+
+        /* HEADER */
+        header { padding: 40px 20px 20px; text-align: center; }
+        header h1 { color: #00d4ff; margin: 0; letter-spacing: 3px; }
+
+        /* POSTS & FILTERS */
+        .filter-container { text-align: center; margin: 15px 0; }
+        .filter-btn { background: #161625; border: 1px solid #333; color: #888; padding: 8px 18px; margin: 4px; cursor: pointer; border-radius: 5px; }
+        .filter-btn.active { border-color: #00d4ff; color: #00d4ff; background: rgba(0, 212, 255, 0.1); }
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .post-card { background: #12121f; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #222; }
         
-        h2 { margin: 10px 0; color: #fff; }
-        .description { color: #ffcc00; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; display: block; }
+        /* BUTTONS & REACTIONS */
+        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        .reactions { margin-top: 15px; display: flex; gap: 10px; justify-content: center; }
+        .react-btn { background: #f8f9fa; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
 
-        /* BLOG CONTENT */
-        .blog-content { 
-            display: none; 
-            margin-top: 20px; 
-            background: #ffffff; 
-            color: #1a1a1a; 
-            padding: 30px; 
-            border-radius: 8px; 
-            line-height: 1.8; 
-            font-size: 1.15rem; 
-            white-space: pre-wrap; 
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .blog-content b, .blog-content strong {
-            color: #b30000 !important;
-            font-size: 1.3rem;
-            display: block;
-            margin-top: 15px;
-            border-left: 4px solid #b30000;
-            padding-left: 10px;
-        }
-
-        .read-more-btn { background: #00d4ff; color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        
-        /* IMPRESSION BUTTONS */
-        .reactions { margin: 20px 0; padding: 15px 0; border-top: 2px solid #eee; display: flex; gap: 10px; justify-content: center; }
-        .react-btn { background: #f8f9fa; border: 1px solid #ddd; color: #333; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-
-        /* AI APP UI */
-        #ai-launcher { position: fixed; bottom: 20px; left: 20px; background: #00d4ff; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 5px 20px rgba(0,212,255,0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10001; font-size: 30px; }
-        #ai-window { position: fixed; bottom: 90px; left: 20px; width: 320px; height: 450px; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: none; flex-direction: column; z-index: 10000; border: 2px solid #00d4ff; overflow: hidden; }
-        .ai-head { background: #00d4ff; padding: 15px; color: #000; font-weight: bold; display: flex; justify-content: space-between; }
-        #ai-msg-container { flex: 1; padding: 15px; overflow-y: auto; background: #f4f4f4; display: flex; flex-direction: column; gap: 10px; color: #333; font-size: 14px; }
-        .ai-input-box { padding: 10px; border-top: 1px solid #ddd; display: flex; gap: 5px; background: #fff; }
-        .ai-input-box input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
-        .ai-input-box button { background: #00d4ff; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        footer { text-align: center; padding: 30px; color: #444; }
+        /* AI BOT UI */
+        #ai-launcher { position: fixed; bottom: 20px; right: 20px; background: #00d4ff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10001; cursor: pointer; box-shadow: 0 0 15px #00d4ff; }
+        #ai-window { position: fixed; bottom: 85px; right: 20px; width: 300px; height: 400px; background: #fff; border-radius: 12px; display: none; flex-direction: column; overflow: hidden; border: 2px solid #00d4ff; z-index: 10000; }
+        .ai-head { background: #00d4ff; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
+        #msg-box { flex: 1; padding: 10px; overflow-y: auto; background: #f9f9f9; color: #333; display: flex; flex-direction: column; gap: 8px; }
     </style>
 </head>
 <body>
 
-<header><h1>EK MYSTERY</h1></header>
-<div id="google_translate_element"></div>
-
-<div class="filter-container">
-    <button class="filter-btn active" onclick="applyFilter('all', this)">All</button>
-    <button class="filter-btn" onclick="applyFilter('Blog', this)">Blog</button>
-    <button class="filter-btn" onclick="applyFilter('Video', this)">Video</button>
-    <button class="filter-btn" onclick="applyFilter('News', this)">News</button>
-</div>
-
-<div class="container" id="post-container">Khufiya jankari load ho rahi hai...</div>
-
-<div id="ai-launcher" onclick="toggleChat()">🤖</div>
-<div id="ai-window">
-    <div class="ai-head"><span>MYSTERY AI</span> <span onclick="toggleChat()" style="cursor:pointer">×</span></div>
-    <div id="ai-msg-container">
-        <div style="background:#e1f5fe; padding:8px; border-radius:8px; align-self:flex-start;">Oye Dakkan! Bol kya janna hai?</div>
+    <div class="navbar">
+        <div class="logo">EK MYSTERY</div>
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
     </div>
-    <div class="ai-input-box">
-        <input type="text" id="ai-typing" placeholder="Ask me...">
-        <button onclick="askAI()">Bhejo</button>
+
+    <div id="sideMenu" class="side-menu">
+        <div style="text-align:right; padding: 10px 20px; color:#00d4ff; cursor:pointer;" onclick="toggleMenu()">✖ Close</div>
+        <a href="#">🏠 Home</a>
+        <a href="#">🔍 Categories</a>
+        <a href="#">📖 About Us</a>
+        <a href="#">✉️ Contact</a>
     </div>
-</div>
 
-<div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px; color: #333; border-top: 2px solid #00d4ff;">
-    <div id="disqus_thread"></div>
-</div>
+    <header><h1>EK MYSTERY</h1></header>
 
-<footer>&copy; 2026 EK MYSTERY</footer>
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="applyFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="applyFilter('Blog', this)">Blog</button>
+        <button class="filter-btn" onclick="applyFilter('Video', this)">Video</button>
+    </div>
 
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'hi', autoDisplay: false}, 'google_translate_element');
-}
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div class="container" id="post-container">Mystery loading...</div>
+
+    <div id="ai-launcher" onclick="toggleChat()">🤖</div>
+    <div id="ai-window">
+        <div class="ai-head"><span>MYSTERY AI</span><span onclick="toggleChat()" style="cursor:pointer">×</span></div>
+        <div id="msg-box"></div>
+        <div style="padding:10px; border-top:1px solid #ccc; display:flex;">
+            <input type="text" id="ai-in" style="flex:1; padding:8px;" placeholder="Type here...">
+            <button onclick="askAI()" style="background:#00d4ff; border:none; padding:8px;">Bhejo</button>
+        </div>
+    </div>
+
+    <div id="universal-disqus" style="display:none; margin-top:20px; padding: 15px; background: #fff; border-radius: 8px;">
+        <div id="disqus_thread"></div>
+    </div>
 
 <script>
+    // Menu Toggle Logic
+    function toggleMenu() {
+        const menu = document.getElementById('sideMenu');
+        menu.style.right = (menu.style.right === "0px") ? "-250px" : "0px";
+    }
+
+    // Google Sheets & Blog Logic
     const SHEET_ID = '1Zzpp8OTfcvXgTKuBHfmTCzEb0k690P5EcBFmMozAQ6o';
     const G_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-
     let postsData = [];
-    let timerInterval;
-    let seconds = 0;
 
     async function loadData() {
         try {
@@ -128,40 +112,11 @@ function googleTranslateElementInit() {
             const json = JSON.parse(text.substr(47).slice(0, -2));
             postsData = json.table.rows;
             applyFilter('all');
-        } catch (e) { document.getElementById('post-container').innerHTML = "Error: " + e; }
+        } catch (e) { console.log(e); }
     }
 
-    function toggleChat() {
-        const win = document.getElementById('ai-window');
-        win.style.display = (win.style.display === "none" || win.style.display === "") ? "flex" : "none";
-    }
-
-    function askAI() {
-        const inp = document.getElementById('ai-typing');
-        const box = document.getElementById('ai-msg-container');
-        if(!inp.value.trim()) return;
-        
-        let uM = document.createElement('div');
-        uM.style = "background:#00d4ff; color:#000; padding:8px; border-radius:8px; align-self:flex-end; max-width:80%";
-        uM.innerText = inp.value;
-        box.appendChild(uM);
-
-        setTimeout(() => {
-            let aM = document.createElement('div');
-            aM.style = "background:#e1f5fe; color:#333; padding:8px; border-radius:8px; align-self:flex-start; max-width:80%";
-            aM.innerText = "Abhi dimaag thanda hai fufa, next update mein tere se ladunga!";
-            box.appendChild(aM);
-            box.scrollTop = box.scrollHeight;
-        }, 800);
-        inp.value = "";
-        box.scrollTop = box.scrollHeight;
-    }
-
-    function applyFilter(category, btnElement) {
-        if (btnElement) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-        }
+    function applyFilter(category, btn) {
+        if(btn) { document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
         const container = document.getElementById('post-container');
         let html = '';
         postsData.forEach((row, index) => {
@@ -172,53 +127,55 @@ function googleTranslateElementInit() {
             const type = row.c[4]?.v || 'Blog';
             const status = row.c[5]?.v || '';
 
-            if (status && status.toString().toLowerCase() === 'live') {
+            if (status.toLowerCase() === 'live') {
                 if (category === 'all' || type.toLowerCase() === category.toLowerCase()) {
                     let vId = link ? link.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=)([^#\&\?]*)/) : null;
-                    let videoHtml = vId ? `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:15px 0;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" src="https://www.youtube.com/embed/${vId[1]}" allowfullscreen></iframe></div>` : '';
-
-                    html += `
-                        <div class="post-card">
-                            <span style="color:#00d4ff; font-size:12px; font-weight:bold;">${type}</span>
-                            <h2>${topic}</h2>
-                            <div class="description">${desc}</div>
-                            ${videoHtml}
-                            ${blogText ? `
-                                <button class="read-more-btn" id="btn-${index}" onclick="toggleBlog(${index}, '${topic.replace(/'/g, "\\'")}')">Read Blog</button>
-                                <div id="blog-box-${index}" class="blog-content">
-                                    ${blogText}
-                                    <div class="reactions">
-                                        <button class="react-btn" onclick="alert('Mast!')">🔥 Mast</button>
-                                        <button class="react-btn" onclick="alert('Shocking!')">😱 Shocking</button>
-                                    </div>
-                                    <div id="comment-anchor-${index}"></div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
+                    let vHtml = vId ? `<div style="position:relative;padding-bottom:56.25%;overflow:hidden;margin-bottom:15px;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://www.youtube.com/embed/${vId[1]}" frameborder="0" allowfullscreen></iframe></div>` : '';
+                    
+                    html += `<div class="post-card">
+                        <span style="color:#00d4ff; font-size:12px;">${type}</span>
+                        <h2>${topic}</h2>
+                        <p class="description">${desc}</p>
+                        ${vHtml}
+                        ${blogText ? `<button class="read-more-btn" onclick="toggleBlog(${index}, '${topic}')">Read Full Story</button>
+                        <div id="blog-box-${index}" style="display:none; background:#fff; color:#000; padding:20px; margin-top:15px; border-radius:8px;">
+                            ${blogText}
+                            <div class="reactions">
+                                <button class="react-btn" onclick="alert('Mast!')">🔥 Mast</button>
+                                <button class="react-btn" onclick="alert('Shock!')">😱 Shocking</button>
+                            </div>
+                            <div id="disqus-place-${index}" style="margin-top:20px;"></div>
+                        </div>` : ''}
+                    </div>`;
                 }
             }
         });
-        container.innerHTML = html || "<p style='text-align:center;'>Kuch nahi mila!</p>";
+        container.innerHTML = html;
     }
 
     function toggleBlog(index, title) {
-        const content = document.getElementById(`blog-box-${index}`);
-        const btn = document.getElementById(`btn-${index}`);
-        const disqusHolder = document.getElementById('universal-disqus');
-        const anchor = document.getElementById(`comment-anchor-${index}`);
-
-        if (content.style.display === "block") {
-            content.style.display = "none"; btn.innerText = "Read Blog";
-            disqusHolder.style.display = "none";
+        const box = document.getElementById(`blog-box-${index}`);
+        const disqus = document.getElementById('universal-disqus');
+        const place = document.getElementById(`disqus-place-${index}`);
+        if(box.style.display === "block") {
+            box.style.display = "none"; disqus.style.display = "none";
         } else {
-            content.style.display = "block"; btn.innerText = "Close Blog";
-            anchor.appendChild(disqusHolder); disqusHolder.style.display = "block";
-            if (typeof DISQUS !== 'undefined') {
-                DISQUS.reset({ reload: true, config: function () { this.page.identifier = 'blog-' + index; this.page.title = title; } });
-            }
+            box.style.display = "block"; disqus.style.display = "block";
+            place.appendChild(disqus);
+            if(typeof DISQUS !== 'undefined') DISQUS.reset({reload:true});
+            else { var d=document,s=d.createElement('script'); s.src='https://ek-mystery.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head||d.body).appendChild(s); }
         }
     }
+
+    function toggleChat() { const w = document.getElementById('ai-window'); w.style.display = (w.style.display==='none'||w.style.display==='')?'flex':'none'; }
+    function askAI() { 
+        const inp = document.getElementById('ai-in'); if(!inp.value) return;
+        const box = document.getElementById('msg-box');
+        box.innerHTML += `<div style="background:#00d4ff; padding:8px; border-radius:8px; align-self:flex-end;">${inp.value}</div>`;
+        setTimeout(() => { box.innerHTML += `<div style="background:#ddd; padding:8px; border-radius:8px; align-self:flex-start;">Abhi dimaag load ho raha hai fufa!</div>`; box.scrollTop = box.scrollHeight; }, 500);
+        inp.value = '';
+    }
+
     loadData();
 </script>
 </body>
